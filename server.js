@@ -71,3 +71,22 @@ function init() {
       }
     });
 }
+//
+function viewAllEmployees() {
+  console.log("Viewing Employees.\n");
+}
+function viewAllEmployeesByDepartment() {
+  console.log("Viewing Departments.\n");
+}
+function addEmployee() {
+  console.log("Viewing Add Employees.\n");
+}
+function removeEmployee() {
+  console.log("Viewing Remove Employee.\n");
+}
+function updateEmployeeRole() {
+  console.log("Viewing Update Employee.\n");
+}
+function addRole() {
+  console.log("Viewing Add Role.\n");
+}
