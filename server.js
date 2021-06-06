@@ -36,7 +36,38 @@ function init() {
     .then(function ({ userChoice }) {
       switch (userChoice) {
         case "View All Employees":
-        // run function
+          // run function
+          viewAllEmployees();
+          break;
+
+        case "View All Employees by Department":
+          //
+          viewAllEmployeesByDepartment();
+          break;
+
+        case "Add Employee":
+          //
+          addEmployee();
+          break;
+
+        case "Remove Employee":
+          //
+          removeEmployee();
+          break;
+
+        case "Update Employee Role":
+          //
+          updateEmployeeRole();
+          break;
+
+        case "Add Role":
+          //
+          addRole();
+          break;
+
+        case "Exit":
+          connection.end;
+          break;
       }
     });
 }
