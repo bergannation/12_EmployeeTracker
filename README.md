@@ -16,7 +16,7 @@ So that I can organize and plan my business
 
 Design the following database schema containing three tables:
 
-![Database Schema](Assets/schema.png)
+![Database Schema](images/schema.png)
 
 - **department**:
 
