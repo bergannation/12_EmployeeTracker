@@ -74,24 +74,25 @@ function init() {
 //
 function viewAllEmployees() {
   console.log("Viewing Employees.\n");
-  let query =
-    `SELECT e.id, e.first_name, e.last_name, r.title, r.department_id, r.salary, e.manager_id
+  let query = `SELECT e.id, e.first_name, e.last_name, r.title, r.department_id, r.salary, e.manager_id
     FROM employee e
     LEFT JOIN role r
 	ON e.role_id = r.id
     LEFT JOIN department d
     ON d.id = r.department_id
     LEFT JOIN employee m
-	ON m.id = e.manager_id`
+	ON m.id = e.manager_id`;
 
-    connection.query(query, function (err,res) {
-        if (err) throw err;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
 
-        console.table(res);
-        console.table('Successful Query on All Employees!\n');
+    console.table(res);
+    console.table("Successful Query on All Employees!\n");
 
-  init();
+    init();
+  });
 }
+
 function viewAllEmployeesByDepartment() {
   console.log("Viewing Departments.\n");
   init();
