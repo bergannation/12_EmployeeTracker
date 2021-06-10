@@ -186,16 +186,41 @@ function promptRole(roleSelection) {
         choice: roleSelection,
       },
     ])
-    .then(function (answer) {
-      init();
-    });
+    .then(function (answer) {});
 }
 
 //
 function removeEmployee() {
   console.log("Viewing Remove Employee.\n");
-  init();
+
+  let query = `SELECT * FROM employee`;
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    const removeEmployeeSelected = res.map(({ id, first_name, last_name }) => ({
+      value: id,
+      name: `${id} ${first_name} ${last_name}`,
+    }));
+
+    console.table(res);
+
+    promptRemove(removeEmployeeSelected);
+  });
 }
+function promptRemove(removeEmployeeSelected) {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employee_id",
+        message: "Which Employee would you like to Remove?",
+        choices: removeEmployeeSelected,
+      },
+    ])
+    .then(function (answer) {});
+}
+//
 function updateEmployeeRole() {
   console.log("Viewing Update Employee.\n");
   init();
