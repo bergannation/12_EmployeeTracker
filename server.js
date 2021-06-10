@@ -152,17 +152,45 @@ function addEmployee() {
 
   connection.query(query, function (err, res) {
     if (err) throw err;
+    console.log(res);
 
-    const roleChoices = res.map(({ id, title, salary }) => ({
+    const roleSelection = res.map(({ id, title, salary, department }) => ({
       value: id,
       title: `${title}`,
       salary: `${salary}`,
+      department: `${department}`,
     }));
     console.table(res);
 
-    promptRole(roleChoices);
+    promptRole(roleSelection);
   });
 }
+
+function promptRole(roleSelection) {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is the Employees First Name?",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is the Employees Last Name?",
+      },
+      {
+        type: "list",
+        name: "roleId",
+        message: "What is the Employees Role?",
+        choice: roleSelection,
+      },
+    ])
+    .then(function (answer) {
+      init();
+    });
+}
+
 //
 function removeEmployee() {
   console.log("Viewing Remove Employee.\n");
