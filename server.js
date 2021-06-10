@@ -93,6 +93,7 @@ function viewAllEmployees() {
   });
 }
 
+// NEED TO FIX THE MULTIPLE DEPARTMENTS INPUTTED
 function viewAllEmployeesByDepartment() {
   console.log("Viewing Departments.\n");
   let query = `SELECT d.id, d.name, r.salary AS budget
@@ -105,28 +106,28 @@ function viewAllEmployeesByDepartment() {
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    const departmentChoices = res.map((data) => ({
+    const departmentSelection = res.map((data) => ({
       name: data.name,
       value: data.id,
     }));
 
     console.table(res);
 
-    promptDepartment(departmentChoices);
+    promptDepartment(departmentSelection);
   });
 }
-function promptDepartment(departmentChoices) {
+function promptDepartment(departmentSelection) {
   inquirer
     .prompt([
       {
         type: "list",
         name: "department_id",
         message: "Select a Department:",
-        choices: departmentChoices,
+        choices: departmentSelection,
       },
     ])
     .then(function (answer) {
-      console.log("answer", answer.department_id);
+      console.log("You chose department: ", answer.department_id, "\n");
 
       let query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
       FROM employee e
@@ -139,8 +140,7 @@ function promptDepartment(departmentChoices) {
       connection.query(query, answer.department_id, function (err, res) {
         if (err) throw err;
 
-        console.table("response", res);
-        console.log(res.affectedRows + "Employees viewed.\n");
+        console.table("Employees in this department: ", res);
 
         init();
       });
@@ -148,6 +148,20 @@ function promptDepartment(departmentChoices) {
 }
 function addEmployee() {
   console.log("Viewing Add Employees.\n");
+  let query =
+    `SELECT * FROM role`
+
+    connection.query(query, function (err,res) {
+        if (err) throw err;
+
+        const roleChoices = res.map(({ id, title, salary }) => ({
+            value: id,
+            title: `${title}`, 
+            salary: `${salary}`
+        }));
+        console.table(res);
+
+        promptRole(roleChoices);
   init();
 }
 function removeEmployee() {
