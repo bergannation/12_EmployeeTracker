@@ -95,7 +95,56 @@ function viewAllEmployees() {
 
 function viewAllEmployeesByDepartment() {
   console.log("Viewing Departments.\n");
-  init();
+  let query = `SELECT d.id, d.name, r.salary AS budget
+    FROM employee e
+    LEFT JOIN role r
+    ON e.role_id = r.id
+    LEFT JOIN department d
+    ON d.id = r.department_id`;
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    const departmentChoices = res.map((data) => ({
+      name: data.name,
+      value: data.id,
+    }));
+
+    console.table(res);
+
+    promptDepartment(departmentChoices);
+  });
+}
+function promptDepartment(departmentChoices) {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "department_id",
+        message: "Select a Department:",
+        choices: departmentChoices,
+      },
+    ])
+    .then(function (answer) {
+      console.log("answer", answer.department_id);
+
+      let query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
+      FROM employee e
+      JOIN role r
+      ON e.role_id = r.id
+      JOIN department d
+      ON d.id = r.department_id
+      WHERE d.id = ?`;
+
+      connection.query(query, answer.department_id, function (err, res) {
+        if (err) throw err;
+
+        console.table("response", res);
+        console.log(res.affectedRows + "Employees viewed.\n");
+
+        init();
+      });
+    });
 }
 function addEmployee() {
   console.log("Viewing Add Employees.\n");
