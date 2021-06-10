@@ -148,22 +148,22 @@ function promptDepartment(departmentSelection) {
 }
 function addEmployee() {
   console.log("Viewing Add Employees.\n");
-  let query =
-    `SELECT * FROM role`
+  let query = `SELECT * FROM role`;
 
-    connection.query(query, function (err,res) {
-        if (err) throw err;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
 
-        const roleChoices = res.map(({ id, title, salary }) => ({
-            value: id,
-            title: `${title}`, 
-            salary: `${salary}`
-        }));
-        console.table(res);
+    const roleChoices = res.map(({ id, title, salary }) => ({
+      value: id,
+      title: `${title}`,
+      salary: `${salary}`,
+    }));
+    console.table(res);
 
-        promptRole(roleChoices);
-  init();
+    promptRole(roleChoices);
+  });
 }
+//
 function removeEmployee() {
   console.log("Viewing Remove Employee.\n");
   init();
