@@ -93,15 +93,10 @@ function viewAllEmployees() {
   });
 }
 
-// NEED TO FIX THE MULTIPLE DEPARTMENTS INPUTTED
+//
 function viewAllEmployeesByDepartment() {
   console.log("Viewing Departments.\n");
-  let query = `SELECT d.id, d.name, r.salary AS budget
-    FROM employee e
-    LEFT JOIN role r
-    ON e.role_id = r.id
-    LEFT JOIN department d
-    ON d.id = r.department_id`;
+  let query = `SELECT * FROM department`;
 
   connection.query(query, function (err, res) {
     if (err) throw err;
@@ -110,7 +105,7 @@ function viewAllEmployeesByDepartment() {
       name: data.name,
       value: data.id,
     }));
-
+    console.log(departmentSelection);
     console.table(res);
 
     promptDepartment(departmentSelection);
@@ -121,13 +116,13 @@ function promptDepartment(departmentSelection) {
     .prompt([
       {
         type: "list",
-        name: "department_id",
+        name: "department_name",
         message: "Select a Department:",
         choices: departmentSelection,
       },
     ])
     .then(function (answer) {
-      console.log("You chose department: ", answer.department_id, "\n");
+      console.log("You chose department: ", answer.department_name, "\n");
 
       let query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department 
       FROM employee e
@@ -137,7 +132,7 @@ function promptDepartment(departmentSelection) {
       ON d.id = r.department_id
       WHERE d.id = ?`;
 
-      connection.query(query, answer.department_id, function (err, res) {
+      connection.query(query, answer.department_name, function (err, res) {
         if (err) throw err;
 
         console.table("Employees in this department: ", res);
@@ -256,7 +251,7 @@ function promptRemove(removeEmployeeSelected) {
         if (err) throw err;
 
         console.table(res);
-        console.log(res.affectedRows + "Deleted.\n");
+        console.log(res.affectedRows + " Employee Deleted.\n");
 
         init();
       });
@@ -398,13 +393,13 @@ function promptAddRole(departmentChoices) {
       },
     ])
     .then(function (answer) {
-      let query = ``;
+      let query = `INSERT INTO role SET ?`;
 
       connection.query(
         query,
         {
-          title: answer.title,
-          salary: answer.salary,
+          title: answer.role_title,
+          salary: answer.role_salary,
           department_id: answer.department_id,
         },
         function (err, res) {

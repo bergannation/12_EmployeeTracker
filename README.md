@@ -52,17 +52,17 @@ If your README is long, add a table of contents to make it easy for users to fin
 
 ## Links
 
-Below are links to access this live website and repository.
+Below are links to access the deployed video link and repository.
 
-Github: https://github.com/bergannation/12_EmployeeTracker
+Github Repository: https://github.com/bergannation/12_EmployeeTracker
 
-Deployed Video Link:
+Deployed Video Link: https://drive.google.com/file/d/1Ku78B2f7yVrxJm0RC9dff0V0_Ta0FOc1/view
 
 ## Mock-Up
 
 The following gif shows the web application's appearance and functionality:
 
-![.](./images/anchorman.gif)
+![.](./images/employeetracker.gif)
 
 ## Installation
 
@@ -84,9 +84,17 @@ node server.js
 
 ![alt text](images/capture1.png)
 
+Below is the starting code that initiates the inquirer:
+
+![alt text](images/init.png)
+
+Once the user has initiated the program via node, the user will be presented with a series of questions/prompts. The user will navigate via arrow keys to select their option. The image below displays an example of what will present itself when an option is selected.
+
+![alt text](images/capture2.png)
+
 ## Tests
 
-Testing:
+Testing: no testing is required
 
 ## Questions
 
