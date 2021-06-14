@@ -250,7 +250,7 @@ function promptRemove(removeEmployeeSelected) {
       },
     ])
     .then(function (answer) {
-      let query = ``;
+      let query = `DELETE FROM employee WHERE ?`;
 
       connection.query(query, { id: answer.employee_id }, function (err, res) {
         if (err) throw err;
@@ -280,7 +280,7 @@ function employeeArray() {
 
     const updatedEmployeeChoice = res.map(({ id, first_name, last_name }) => ({
       value: id,
-      title: `${first_name}``${last_name}`,
+      title: `${first_name} + ${last_name}`,
     }));
 
     console.table(res);
@@ -325,18 +325,18 @@ function promptEmployeeRole(updatedEmployeeChoice, roleChoices) {
       {
         type: "list",
         name: "employee_id",
-        message: "Select Employee to Set Role:",
+        message: "Select Employee by ID to Set Role:",
         choices: updatedEmployeeChoice,
       },
       {
         type: "list",
         name: "role_id",
-        message: "Which Role would you like to Update?",
+        message: "Select which Role by ID you would like to update it to:",
         choices: roleChoices,
       },
     ])
     .then(function (answer) {
-      let query = ``;
+      let query = `UPDATE employee SET ? WHERE ?`;
 
       connection.query(
         query,
