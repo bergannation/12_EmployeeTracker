@@ -148,24 +148,36 @@ function promptDepartment(departmentSelection) {
 }
 function addEmployee() {
   console.log("Viewing Add Employees.\n");
-  let query = `SELECT * FROM role`;
+  let query = `SELECT * FROM employee`;
 
   connection.query(query, function (err, res) {
     if (err) throw err;
 
-    const roleSelection = res.map(({ id, title, salary, department }) => ({
-      value: title,
-      title: `${title}`,
-      salary: `${salary}`,
-      department: `${department}`,
+    const employee = res.map(({ id, first_name, last_name, manager_id }) => ({
+      value: manager_id,
+      firstName: `${first_name}`,
+      lastName: `${last_name}`,
+      managerId: `${manager_id}`,
     }));
-    console.table(res);
 
-    promptRole(roleSelection);
+    let query2 = `SELECT * FROM role`;
+
+    connection.query(query2, function (err, res) {
+      if (err) throw err;
+
+      const roleSelection = res.map(({ id, title, salary }) => ({
+        value: id,
+        title: `${title}`,
+        salary: `${salary}`,
+      }));
+      console.table(res);
+
+      promptRole(roleSelection, employee);
+    });
   });
 }
 
-function promptRole(roleSelection) {
+function promptRole(roleSelection, employee) {
   inquirer
     .prompt([
       {
@@ -181,34 +193,30 @@ function promptRole(roleSelection) {
       {
         type: "list",
         name: "roleId",
-        message: "What is the Employees Role?",
+        message: "What is the Employees Role by id?",
         choices: roleSelection,
+      },
+      {
+        type: "list",
+        name: "manager_id",
+        message: "Choose the employee's manager by id: ",
+        choices: employee,
+        default: "N/A",
       },
     ])
     .then(function (answer) {
       console.log(answer);
 
-      let query = ``;
+      let query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${answer.first_name}','${answer.last_name}', ${answer.roleId}, '${answer.manager_id}');`;
 
-      connection.query(
-        query,
-        {
-          first_name: answer.first_name,
-          last_name: answer.last_name,
-          role_id: answer.roleId,
-          manager_id: answer.managerId,
-        },
-        function (err, res) {
-          if (err) throw err;
+      connection.query(query, function (err, res) {
+        if (err) throw err;
 
-          console.table(res);
-          console.log(
-            res.insertedRows + "Inserted Information Successfully!\n"
-          );
+        console.table(res);
+        console.log(res.affectedRows + " row inserted successfully!\n");
 
-          init();
-        }
-      );
+        init();
+      });
     });
 }
 
