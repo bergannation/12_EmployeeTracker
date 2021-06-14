@@ -186,7 +186,32 @@ function promptRole(roleSelection) {
         choice: roleSelection,
       },
     ])
-    .then(function (answer) {});
+    .then(function (answer) {
+      console.log(answer);
+
+      let query = `
+            `;
+
+      connection.query(
+        query,
+        {
+          first_name: answer.first_name,
+          last_name: answer.last_name,
+          role_id: answer.roleId,
+          manager_id: answer.managerId,
+        },
+        function (err, res) {
+          if (err) throw err;
+
+          console.table(res);
+          console.log(
+            res.insertedRows + "Inserted Information Successfully!\n"
+          );
+
+          init();
+        }
+      );
+    });
 }
 
 //
@@ -218,12 +243,25 @@ function promptRemove(removeEmployeeSelected) {
         choices: removeEmployeeSelected,
       },
     ])
-    .then(function (answer) {});
+    .then(function (answer) {
+      let query = `
+      `;
+
+      connection.query(query, { id: answer.employee_id }, function (err, res) {
+        if (err) throw err;
+
+        console.table(res);
+        console.log(res.affectedRows + "Deleted.\n");
+
+        startApp();
+      });
+    });
 }
+
 //
 function updateEmployeeRole() {
   console.log("Viewing Update Employee.\n");
-  init();
+  employeeArray();
 }
 
 //
