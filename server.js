@@ -152,10 +152,9 @@ function addEmployee() {
 
   connection.query(query, function (err, res) {
     if (err) throw err;
-    console.log(res);
 
     const roleSelection = res.map(({ id, title, salary, department }) => ({
-      value: id,
+      value: title,
       title: `${title}`,
       salary: `${salary}`,
       department: `${department}`,
@@ -183,14 +182,13 @@ function promptRole(roleSelection) {
         type: "list",
         name: "roleId",
         message: "What is the Employees Role?",
-        choice: roleSelection,
+        choices: roleSelection,
       },
     ])
     .then(function (answer) {
       console.log(answer);
 
-      let query = `
-            `;
+      let query = ``;
 
       connection.query(
         query,
@@ -244,8 +242,7 @@ function promptRemove(removeEmployeeSelected) {
       },
     ])
     .then(function (answer) {
-      let query = `
-      `;
+      let query = ``;
 
       connection.query(query, { id: answer.employee_id }, function (err, res) {
         if (err) throw err;
@@ -253,7 +250,7 @@ function promptRemove(removeEmployeeSelected) {
         console.table(res);
         console.log(res.affectedRows + "Deleted.\n");
 
-        startApp();
+        init();
       });
     });
 }
@@ -262,6 +259,90 @@ function promptRemove(removeEmployeeSelected) {
 function updateEmployeeRole() {
   console.log("Viewing Update Employee.\n");
   employeeArray();
+}
+
+function employeeArray() {
+  console.log("Update an Employee.");
+
+  let query = `SELECT e.id, e.first_name, e.last_name
+  FROM employee e`;
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    const updatedEmployeeChoice = res.map(({ id, first_name, last_name }) => ({
+      value: id,
+      title: `${first_name}``${last_name}`,
+    }));
+
+    console.table(res);
+    console.log("Success!\n");
+
+    roleArray(updatedEmployeeChoice);
+  });
+}
+function roleArray(updatedEmployeeChoice) {
+  console.log("Updating");
+
+  let query = `SELECT e.id, e.first_name, e.last_name, r.title, r.department_id, r.salary, e.manager_id
+  FROM employee e
+  JOIN role r
+  ON e.role_id = r.id
+  JOIN department d
+  ON d.id = r.department_id
+  JOIN employee m
+  ON m.id = e.manager_id`;
+
+  let roleChoices;
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    roleChoices = res.map(({ id, title, salary }) => ({
+      value: id,
+      title: `${title}`,
+      salary: `${salary}`,
+    }));
+
+    console.table(res);
+    console.log("Success!\n");
+
+    promptEmployeeRole(updatedEmployeeChoice, roleChoices);
+  });
+}
+
+function promptEmployeeRole(updatedEmployeeChoice, roleChoices) {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "employee_id",
+        message: "Select Employee to Set Role:",
+        choices: updatedEmployeeChoice,
+      },
+      {
+        type: "list",
+        name: "role_id",
+        message: "Which Role would you like to Update?",
+        choices: roleChoices,
+      },
+    ])
+    .then(function (answer) {
+      let query = ``;
+
+      connection.query(
+        query,
+        [answer.role_id, answer.employee_id],
+        function (err, res) {
+          if (err) throw err;
+
+          console.table(res);
+          console.log(res.affectedRows + "Update Success.");
+
+          init();
+        }
+      );
+    });
 }
 
 //
@@ -309,8 +390,7 @@ function promptAddRole(departmentChoices) {
       },
     ])
     .then(function (answer) {
-      let query = `
-      `;
+      let query = ``;
 
       connection.query(
         query,
