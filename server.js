@@ -225,7 +225,70 @@ function updateEmployeeRole() {
   console.log("Viewing Update Employee.\n");
   init();
 }
+
+//
 function addRole() {
   console.log("Viewing Add Role.\n");
-  init();
+  let query = `SELECT d.id, d.name, r.salary AS budget
+  FROM employee e
+  JOIN role r
+  ON e.role_id = r.id
+  JOIN department d
+  ON d.id = r.department_id`;
+
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+
+    const departmentChoices = res.map(({ id, name }) => ({
+      value: id,
+      name: `${name}`,
+    }));
+
+    console.table(res);
+    console.log("Department Array.");
+
+    promptAddRole(departmentChoices);
+  });
+}
+function promptAddRole(departmentChoices) {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "role_title",
+        message: "Add Role Title?",
+      },
+      {
+        type: "input",
+        name: "role_salary",
+        message: "What is the Role Salary?",
+      },
+      {
+        type: "list",
+        name: "department_id",
+        message: "Which Department?",
+        choices: departmentChoices,
+      },
+    ])
+    .then(function (answer) {
+      let query = `
+      `;
+
+      connection.query(
+        query,
+        {
+          title: answer.title,
+          salary: answer.salary,
+          department_id: answer.department_id,
+        },
+        function (err, res) {
+          if (err) throw err;
+
+          console.table(res);
+          console.log("Success!\n");
+
+          init();
+        }
+      );
+    });
 }
